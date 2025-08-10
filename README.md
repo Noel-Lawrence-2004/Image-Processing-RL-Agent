@@ -28,7 +28,7 @@ I've implemented an Actor-Critic network in PyTorch without using pre-built RL f
 ### Learning Algorithm
 -  DDPG (Deep Deterministic Policy Gradient)
   
-## 🏋️ Training Loop
+## Training Loop
 For each episode:
 1. **Environment Reset** : Receive initial state.  
    
@@ -41,9 +41,7 @@ For each episode:
 5. **Network Updates** *(if buffer > batch_size)*  
    - **Critic Update**  
      - **Target Q-value**:  
-       \[
-       y = r + \gamma (1 - done) Q_{\text{target}}\big(s', \pi_{\text{target}}(s')\big)
-       \]  
+      **target_Q = rewards + GAMMA * (1 - dones) * target_Q**
      - Minimize MSE between `current_Q` and `y`.  
      - Apply gradient clipping (`max_grad_norm`).
        
