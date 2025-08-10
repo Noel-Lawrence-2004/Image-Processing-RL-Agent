@@ -56,7 +56,7 @@ Below is the cumulative reward per episode recorded during training.
 ![Cumulative Reward per Episode](results/cumulative_reward.png)
 
 ---
-## 🔎 Observations & Analysis
+## Observations & Analysis
 
 ### Did the agent learn meaningful transformations?
 In our runs, the agent **did** learn useful and consistent transformations for many images.  
