@@ -100,3 +100,56 @@ This improvement is visible as:
 - With a limited dataset, balancing replay usage and fresh data is important.  
 - Increasing `MAX_STEPS` per episode or using a **moderate replay buffer size** helped maintain batch diversity.
 
+--- 
+Part B: Report and Analysis
+Before-and-After Image Results
+Below is a 5×2 grid showing original images (left) and their processed versions after the RL agent’s transformations (right):
+![Validation Grid](results/cumulative_reward.png)
+
+
+Analysis of Results
+The continuous Actor-Critic policy successfully enhanced some images by adjusting brightness, contrast, and sharpness to improve YOLOv5’s object detection confidence.
+
+Improvements were most visible in images that were initially low-light or low-contrast — the agent brightened and sharpened them, leading to better detection results.
+
+Minimal change was applied to already well-lit and sharp images, which is desirable as it avoids unnecessary transformations.
+
+However, not all transformations were beneficial:
+
+In certain high-noise or cluttered backgrounds, increasing sharpness degraded YOLO’s detection performance.
+
+Large contrast changes sometimes caused overexposure, reducing confidence.
+
+---
+Continuous vs. Discrete Policy Discussion
+Continuous Policy (this work):
+
+Strength: Allows fine-grained control over transformations, enabling subtle adjustments per step.
+
+Weakness: Harder to learn stable behavior due to large action space and sensitivity to scaling.
+
+Discrete Policy:
+
+Strength: Easier to train; fewer catastrophic over-adjustments.
+
+Weakness: Coarser adjustments may miss optimal values.
+
+---
+
+Failure Modes
+Over-sharpening or over-contrast adjustments in already well-optimized images.
+
+Sensitivity to YOLO confidence noise — minor fluctuations can mislead the reward.
+
+Short episode lengths (5 steps) limiting the agent’s opportunity to explore multiple small adjustments.
+
+---
+
+Future Improvements
+Reward shaping: Better balance between detection count and confidence improvement.
+
+Longer episodes: Allow the agent to make gradual changes.
+
+Adaptive step sizes: Reduce overshooting in well-lit images.
+
+Multi-objective reward: Penalize overly aggressive changes that hurt visual quality.
