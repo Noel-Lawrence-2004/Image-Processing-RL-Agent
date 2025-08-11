@@ -3,7 +3,7 @@
 A RL agent that Learn appropriate Preprocessing factors to be applied to images such that it can improve the performance of Yolov5 predictions of Various objects 
 
 ---
-
+## Part A : ** Custom gym Environment with Continuous Actions **
 ## Continuous Action Space Design
 In this project, the action space is a continuous vector representing image transformation parameters.  
 Each dimension of the action vector corresponds to a preprocessing parameter:
@@ -45,7 +45,7 @@ For each episode:
      - Apply gradient clipping (`max_grad_norm`).
        
    - **Actor Update** *(delayed by `policy_delay` steps)*  
-     - Maximize \( Q(s, \pi(s)) \) via gradient ascent (implemented as **negative mean** for loss).
+     - Loss is negative mean of critic(states, actor(states)).
        
    - **Soft Update** of target networks after Actor update.
      
@@ -59,19 +59,13 @@ Below is the cumulative reward per episode recorded during training.
 ## Observations & Analysis
 
 ### Did the agent learn meaningful transformations?
-In our runs, the agent **did** learn useful and consistent transformations for many images.  
-It often increased **brightness**, **contrast**, or modestly **sharpened** images that originally had low YOLO detection confidence.  
-
-This improvement is visible as:
-- A **rising rolling mean** of episodic reward in the saved training plot.
+The agent did learn useful and consistent transformations for many images.  
+It often increased brightness, contrast, or modestly sharpened images that originally had low YOLO detection confidence.
+We can see this as:
+- **rising rolling mean** of episodic reward in the saved training plot.
 - **Qualitative samples** showing processed images with more confident detections and, in some cases, more detected objects.
-
----
-
-### Concrete indicators we tracked
-- **Episode reward (training)** — shows the agent’s episodic objective (YOLO confidence changes) improving over time.
-- **Evaluation (no-noise) episodes** — run periodically to get a stable performance curve measured without exploration noise.
-- **Per-image confidence change histogram** — useful to verify whether most images improved or only a few outliers.
+- **Episode reward (training)** — shows the agent’s episodic Rewards improving.
+- **Actor and Critic Loss** - shows the actors and critics loss decreasing as training improves. 
 - **5×2 qualitative grid** — visually compares original vs processed detections.
 
 ---
@@ -79,60 +73,26 @@ This improvement is visible as:
 ### Primary challenges encountered with continuous control
 
 #### 1. Reward noise & instability
-- YOLO confidences can jump drastically for small image changes, producing noisy rewards.  
-- Mitigation: **tanh** scaling + short-step reward smoothing (moving average over the last 3–5 steps).
+- YOLO confidences were changing by huge amounts for small changes to the image giving noisy rewards.  
 
-#### 2. Exploration vs exploitation trade-off
-- Continuous action spaces need careful noise scheduling.  
-- Used **exponentially decaying Gaussian noise** (start → end) so the agent explores widely early, then fine-tunes later.
-
-#### 3. Action scaling / ranges
-- Sensible ranges for brightness/contrast/sharpness are crucial:  
-  - Too large → destructive transformations, unstable training.  
-  - Too small → flat reward landscape.  
-- We started with **moderate ranges** and **annealed scale** during training.
-
-#### 4. Replay buffer / update cadence
-- Too many gradient updates per environment step can overfit to stale samples and destabilize the critic.  
-- Solution: Reduce `updates_per_step` and use `policy_delay` (update actor less often than critic) for stability.
-
-#### 5. Sample efficiency
-- With a limited dataset, balancing replay usage and fresh data is important.  
-- Increasing `MAX_STEPS` per episode or using a **moderate replay buffer size** helped maintain batch diversity.
+#### 2. Action scaling 
+- To figure out the perfect action ranges for brightness/contrast/sharpness was a crucial task , making them large caused the rewards to be unstable and for smaller actions the image didn't get any meaningful changes.
 
 --- 
-Part B: Report and Analysis
-Before-and-After Image Results
+## Part B: Report and Analysis
+###Before-and-After Image Results
 Below is a 5×2 grid showing original images (left) and their processed versions after the RL agent’s transformations (right):
-![Validation Grid](results/cumulative_reward.png)
-
-
-Analysis of Results
-The continuous Actor-Critic policy successfully enhanced some images by adjusting brightness, contrast, and sharpness to improve YOLOv5’s object detection confidence.
-
-Improvements were most visible in images that were initially low-light or low-contrast — the agent brightened and sharpened them, leading to better detection results.
-
-Minimal change was applied to already well-lit and sharp images, which is desirable as it avoids unnecessary transformations.
-
-However, not all transformations were beneficial:
-
-In certain high-noise or cluttered backgrounds, increasing sharpness degraded YOLO’s detection performance.
-
-Large contrast changes sometimes caused overexposure, reducing confidence.
+- ![Validation Grid](results/grid_img.png)
 
 ---
-Continuous vs. Discrete Policy Discussion
-Continuous Policy (this work):
 
-Strength: Allows fine-grained control over transformations, enabling subtle adjustments per step.
+### Analysis of Results
 
-Weakness: Harder to learn stable behavior due to large action space and sensitivity to scaling.
+The continuous Actor-Critic policy successfully enhanced some images by adjusting brightness, contrast, and sharpness to improve YOLOv5’s object detection confidence. In some images as shown in the grid, the model performs worse in situations where there are a lot of objects to be detected or cluttered backgrounds.
 
-Discrete Policy:
-
-Strength: Easier to train; fewer catastrophic over-adjustments.
-
-Weakness: Coarser adjustments may miss optimal values.
+---
+### Continuous vs. Discrete Policy Discussion
+Continuous Policy allows fine-grained control over transformations, enabling minute adjustments per step. Harder to learn stable behavior due to large action space and sensitivity to scaling. Whereas for Discrete policy is easier to train; fewer catastrophic over-adjustments. Fixed adjustments values may not converge to optimal transformations for each image. With enough episodes a continuous policy can perform better as compared to a discrete one 
 
 ---
 
