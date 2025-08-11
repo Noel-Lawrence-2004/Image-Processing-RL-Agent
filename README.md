@@ -5,7 +5,7 @@ A RL agent that Learn appropriate Preprocessing factors to be applied to images 
 ---
 ## Part A : **Custom gym Environment with Continuous Actions**
 ## Continuous Action Space Design
-In this project, the action space is a continuous vector representing image transformation parameters.  
+In this project, the action space is a continuous vector representing image transformation parameters. The values in these vectors are continuous values bounded within a range and the actor is able to select a float value from this range to take actions in the environment.
 Each dimension of the action vector corresponds to a preprocessing parameter:
   - action[0] - Brightness | `[-1, 1]` | Adjusts pixel intensity
   - action[1] - Contrast | `[-1, 1]` | Modifies image contrast
