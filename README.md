@@ -59,12 +59,11 @@ Below is the cumulative reward per episode recorded during training.
 ## Observations & Analysis
 
 ### Did the agent learn meaningful transformations?
-The agent did learn useful and consistent transformations for many images.  
-It often increased brightness, contrast, or modestly sharpened images that originally had low YOLO detection confidence.
+The agent did learn useful transformations for many images.  
+It often increased brightness, contrast, or sharpened images that originally had low YOLO detection confidence.
 We can see this as:
-- **rising rolling mean** of episodic reward in the saved training plot.
-- **Qualitative samples** showing processed images with more confident detections and, in some cases, more detected objects.
-- **Episode reward (training)** — shows the agent’s episodic Rewards improving.
+- **Qualitative samples** showing processed images with more confident detections and sometimes even more detected objects.
+- **Episode reward** — shows the agent’s episodic Rewards improving.
 - **Actor and Critic Loss** - shows the actors and critics loss decreasing as training improves. 
 - **5×2 qualitative grid** — visually compares original vs processed detections.
 
@@ -80,19 +79,20 @@ We can see this as:
 
 --- 
 ## Part B: Report and Analysis
+
 ### Before-and-After Image Results
 Below is a 5×2 grid showing original images (left) and their processed versions after the RL agent’s transformations (right):
 - ![Validation Grid](results/289b19ec-6766-4327-8aca-034b4cef4846.png)
 
 ---
 
-### Analysis of Results
+### Analysis
 
-The continuous Actor-Critic policy successfully enhanced some images by adjusting brightness, contrast, and sharpness to improve YOLOv5’s object detection confidence. In some images as shown in the grid, the model performs worse in situations where there are a lot of objects to be detected or cluttered backgrounds.
+ - The continuous Actor-Critic policy successfully enhanced some images by adjusting brightness, contrast, and sharpness to improve YOLOv5’s object detection confidence. In some images as shown in the grid, the model performs worse in situations where there are a lot of objects to be detected or cluttered backgrounds.
 
 ---
-### Continuous vs. Discrete Policy Discussion
-Continuous Policy allows fine-grained control over transformations, enabling minute adjustments per step. Harder to learn stable behavior due to large action space and sensitivity to scaling. Whereas for Discrete policy is easier to train; fewer catastrophic over-adjustments. Fixed adjustments values may not converge to optimal transformations for each image. With enough episodes a continuous policy can perform better as compared to a discrete one 
+### Continuous vs. Discrete Policy
+ - Continuous Policy allows fine control over transformations, enabling minute adjustments per step. Harder to learn stable behavior due to large action space and sensitivity to scaling. Whereas Discrete policy is easier to train and can be set to have fewer over-adjustments. Fixed adjustments values may not converge to optimal transformations for each image. With enough episodes a continuous policy can perform better as compared to a discrete one 
 
 ---
 
@@ -103,4 +103,7 @@ Continuous Policy allows fine-grained control over transformations, enabling min
 ---
 
 ### Agent Improvements
-The agent could be improved by trying other algorithms such as TD3 or any other continuous policy agents. Better balance between detection count and confidence improvement. Penalize overly aggressive changes that hurt visual quality.
+- The agent could be improved by trying other algorithms such as TD3 or any other continuous policy agents.
+- Better balance between detection count and confidence improvement.
+- Penalize overly aggressive changes that hurt visual quality.
+- Hyperparameter tuning for better learning.
