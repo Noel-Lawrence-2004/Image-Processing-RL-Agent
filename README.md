@@ -96,20 +96,11 @@ Continuous Policy allows fine-grained control over transformations, enabling min
 
 ---
 
-Failure Modes
-Over-sharpening or over-contrast adjustments in already well-optimized images.
-
-Sensitivity to YOLO confidence noise — minor fluctuations can mislead the reward.
-
-Short episode lengths (5 steps) limiting the agent’s opportunity to explore multiple small adjustments.
+### Failure Modes
+  - Over adjustments in already well-optimized images causing yolo confidence to drop.
+  - Sensitivity to YOLO confidence noise — minor fluctuations can mislead the reward.  
 
 ---
 
-Future Improvements
-Reward shaping: Better balance between detection count and confidence improvement.
-
-Longer episodes: Allow the agent to make gradual changes.
-
-Adaptive step sizes: Reduce overshooting in well-lit images.
-
-Multi-objective reward: Penalize overly aggressive changes that hurt visual quality.
+### Agent Improvements
+The agent could be improved by trying other algorithms such as TD3 or any other continuous policy agents. Better balance between detection count and confidence improvement. Penalize overly aggressive changes that hurt visual quality.
