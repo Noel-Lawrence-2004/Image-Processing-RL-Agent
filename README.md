@@ -3,7 +3,7 @@
 A RL agent that Learn appropriate Preprocessing factors to be applied to images such that it can improve the performance of Yolov5 predictions of Various objects 
 
 ---
-## Part A : ** Custom gym Environment with Continuous Actions **
+## Part A : **Custom gym Environment with Continuous Actions**
 ## Continuous Action Space Design
 In this project, the action space is a continuous vector representing image transformation parameters.  
 Each dimension of the action vector corresponds to a preprocessing parameter:
