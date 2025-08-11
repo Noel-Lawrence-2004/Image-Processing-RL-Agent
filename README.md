@@ -34,7 +34,7 @@ For each episode:
    
 2. **Action Selection** : Actor predicts an action from the current state. After adding Noise Exploration is encouraged earlier on and more exploitation later in training.  
 
-3. **Environment Step** : Apply action → receive `(next_state, reward, done, info)` from environment.  
+3. **Environment Step** : Apply action -> receive `(next_state, reward, done, info)` from environment.  
 
 4. **Replay Buffer Storage** : Store `(state, action, reward, next_state, done)` in memory.  
 
