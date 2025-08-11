@@ -80,7 +80,7 @@ We can see this as:
 
 --- 
 ## Part B: Report and Analysis
-###Before-and-After Image Results
+### Before-and-After Image Results
 Below is a 5×2 grid showing original images (left) and their processed versions after the RL agent’s transformations (right):
 - ![Validation Grid](results/grid_img.png)
 
