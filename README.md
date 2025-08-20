@@ -52,7 +52,7 @@ For each episode:
      - Loss is negative mean of critic(states, actor(states)).
        
    - **Soft Update** of target networks after Actor update.
-     - After actor update, softly update target networks using Polyak averaging:  \[\theta' \leftarrow \tau \theta + (1 - \tau)\theta'\]  
+     - After actor update, softly update target networks using Polyak averaging
      
 ---
 ## Training Reward Plot
