@@ -86,6 +86,9 @@ We can see this as:
 Below is a 5×2 grid showing original images (left) and their processed versions after the RL agent’s transformations (right):
 - ![Validation Grid](results/eval_image.png)
 
+Precision Consistency:
+- ![IoU](results/precision.png)
+
 ---
 
 ### Analysis
