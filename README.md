@@ -9,7 +9,7 @@ In this project, the action space is a continuous vector representing image tran
 Each dimension of the action vector corresponds to a preprocessing parameter:
   - action[0] - Brightness | `[-1, 1]` | Adjusts pixel intensity
   - action[1] - Contrast | `[-1, 1]` | Modifies image contrast
-  - action[2] - Sharpness | `[-1, 1]` | Sharpens or blurs the image
+  - action[2] - Sharpness | `[0, 1]` | Sharpens or blurs the image
     
 ---
 ## Actor-Critic Architecture (From Scratch)
@@ -18,7 +18,7 @@ I've implemented an Actor-Critic network in PyTorch without using pre-built RL f
 ### Actor Network  [no_states - 256 - 256 - no_actions]
 - **Input:** Image state representation  
 - **Hidden Layers:** 2 fully connected layers with ReLU activation  
-- **Output:** Continuous action vector (via `tanh` or scaled activation)  
+- **Output:** Continuous action vector (via `tanh` or `sigmoid `)  
 
 ### Critic Network  [no_states - (256 + no_action) - 256 - 1]
 - **Input:** Concatenation of state and action  
@@ -26,13 +26,13 @@ I've implemented an Actor-Critic network in PyTorch without using pre-built RL f
 - **Output:** Q-value estimate for the given (state, action) pair  
 
 ### Learning Algorithm
--  DDPG (Deep Deterministic Policy Gradient)
+-  TD3 Algorithm
   
 ## Training Loop
 For each episode:
 1. **Environment Reset** : Receive initial state.  
    
-2. **Action Selection** : Actor predicts an action from the current state. After adding Noise Exploration is encouraged earlier on and more exploitation later in training.  
+2. **Action Selection** : Actor predicts an action from the current state. After adding Noise Exploration earlier on and more exploitation later in training.  
 
 3. **Environment Step** : Apply action -> receive `(next_state, reward, done, info)` from environment.  
 
@@ -42,12 +42,20 @@ For each episode:
    - **Critic Update**  
      - **Target Q-value**:  *target_Q = rewards + GAMMA * (1 - dones) * target_Q*
      - Minimize MSE between `current_Q` and `target_Q`.  
-     - Apply gradient clipping (`max_grad_norm`).
+     - Add clipped Gaussian noise to target actor’s next action (policy smoothing).
+     - Update both critics by minimizing **MSE loss** between predicted Q-values `(Q1, Q2)` and `target_Q`.  
+     - Store critic loss (minimum of both critics).  
        
-   - **Actor Update** *(delayed by `policy_delay` steps)*  
+   - **Actor Update** *(delayed by `policy_delay` steps)*
+     - Backpropagate and update the actor parameters.  
+     - Store actor loss.  
      - Loss is negative mean of critic(states, actor(states)).
        
    - **Soft Update** of target networks after Actor update.
+     - After actor update, softly update target networks using Polyak averaging:  
+       \[
+       \theta' \leftarrow \tau \theta + (1 - \tau)\theta'
+       \]  
      
 ---
 ## Training Reward Plot
@@ -73,9 +81,6 @@ We can see this as:
 
 #### 1. Reward noise & instability
 - YOLO confidences were changing by huge amounts for small changes to the image giving noisy rewards.  
-
-#### 2. Action scaling 
-- To figure out the perfect action ranges for brightness/contrast/sharpness was a crucial task , making them large caused the rewards to be unstable and for smaller actions the image didn't get any meaningful changes.
 
 --- 
 ## Part B: Report and Analysis
