@@ -108,7 +108,6 @@ Precision Consistency:
 ---
 
 ### Agent Improvements
-- The agent could be improved by trying other algorithms such as TD3 or any other continuous policy agents.
 - Better balance between detection count and confidence improvement.
 - Penalize overly aggressive changes that hurt visual quality.
 - Hyperparameter tuning for better learning.
