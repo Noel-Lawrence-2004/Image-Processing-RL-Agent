@@ -58,7 +58,7 @@ For each episode:
 ## Training Reward Plot
 
 Below is the cumulative reward per episode recorded during training.  
-![Cumulative Reward per Episode](results/cumulative_reward.jpg)
+![Cumulative Reward per Episode](results/cumulative_reward.png)
 
 ---
 ## Observations & Analysis
