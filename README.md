@@ -15,7 +15,7 @@ Each dimension of the action vector corresponds to a preprocessing parameter:
 ## Actor-Critic Architecture (From Scratch)
 I've implemented an Actor-Critic network in PyTorch without using pre-built RL frameworks like Stable Baselines3.  
 
-### Actor Network  [no_states - 256 - 256 - no_actions]
+### Actor Network  [no_states - 128 - 128 - no_actions]
 - **Input:** Image state representation  
 - **Hidden Layers:** 2 fully connected layers with ReLU activation  
 - **Output:** Continuous action vector (via `tanh` or `sigmoid `)  
